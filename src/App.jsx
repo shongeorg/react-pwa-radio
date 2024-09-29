@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PWABadge from "./PWABadge.jsx";
-import "./App.css";
+import "./App.css"; // Переконайтесь, що стиль для Houdini реалізований тут
 import { Station } from "./Station.jsx";
 import { ConnectionStatus } from "./ConnectionStatus.jsx";
 import { NetworkStatus } from "./NetworkStatus.jsx";
@@ -9,6 +9,15 @@ function App() {
   const [stations, setStations] = useState([]);
   const [active, setActive] = useState(null);
   const [audio, setAudio] = useState(null);
+  const [audioContext, setAudioContext] = useState(null);
+  const [analyser, setAnalyser] = useState(null);
+  const [audioData, setAudioData] = useState(new Uint8Array(256));
+
+  useEffect(() => {
+    if (CSS.paintWorklet) {
+      CSS.paintWorklet.addModule("AudioVisualizer.js");
+    }
+  }, []);
 
   useEffect(() => {
     fetch("https://de1.api.radio-browser.info/json/stations/bycountry/Ukraine")
@@ -31,7 +40,40 @@ function App() {
       newAudio.pause();
       setAudio(null);
     };
-  }, []);
+  }, [active]);
+
+  useEffect(() => {
+    if (audio) {
+      const newAudioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      const newAnalyser = newAudioContext.createAnalyser();
+      newAnalyser.fftSize = 256;
+
+      const source = newAudioContext.createMediaElementSource(audio);
+      source.connect(newAnalyser);
+      newAnalyser.connect(newAudioContext.destination);
+
+      setAudioContext(newAudioContext);
+      setAnalyser(newAnalyser);
+
+      audio.play();
+      newAudioContext.resume();
+
+      const dataArray = new Uint8Array(newAnalyser.frequencyBinCount);
+
+      const updateAudioData = () => {
+        newAnalyser.getByteFrequencyData(dataArray);
+        setAudioData([...dataArray]);
+        document.body.style.setProperty(
+          "--audio-data",
+          JSON.stringify(dataArray)
+        );
+        requestAnimationFrame(updateAudioData);
+      };
+
+      updateAudioData();
+    }
+  }, [audio]);
 
   const handleStationChange = (station) => {
     setActive(station);

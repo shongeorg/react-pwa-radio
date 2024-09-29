@@ -65,3 +65,9 @@ button {
     background-color: red;
   }
 }
+
+body {
+  background: paint(audio-visualizer);
+  --audio-data: "[]";
+  min-height: 100svh;
+}
