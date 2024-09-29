@@ -67,7 +67,7 @@ button {
 }
 
 body {
-  background: paint(audio-visualizer);
+  background-image: paint(audio-visualizer);
   --audio-data: "[]";
   min-height: 100svh;
 }
