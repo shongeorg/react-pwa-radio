@@ -25,7 +25,7 @@ function App() {
     play,
   } = useAudio(activeStation, volume);
 
-  const { scrollContainerRef, scrollToActive } = useScrollToActive(activeStation);
+  const { scrollContainerRef } = useScrollToActive(activeStation);
 
   useEffect(() => {
     if (!stations || stations.length === 0) return;
@@ -49,11 +49,8 @@ function App() {
   const handleStationSelect = useCallback((station) => {
     setActiveStation(station);
     updateHash(station);
-    setTimeout(() => {
-      play();
-      scrollToActive();
-    }, 100);
-  }, [setActiveStation, play, updateHash, scrollToActive]);
+    setTimeout(() => play(), 100);
+  }, [setActiveStation, play, updateHash]);
 
   const handlePrevious = useCallback(() => {
     if (!stations || stations.length === 0 || !activeStation) return;
@@ -62,8 +59,7 @@ function App() {
     const prevStation = stations[previousIndex];
     setActiveStation(prevStation);
     updateHash(prevStation);
-    setTimeout(() => scrollToActive(), 100);
-  }, [stations, activeStation, setActiveStation, updateHash, scrollToActive]);
+  }, [stations, activeStation, setActiveStation, updateHash]);
 
   const handleNext = useCallback(() => {
     if (!stations || stations.length === 0 || !activeStation) return;
@@ -72,8 +68,7 @@ function App() {
     const nextStation = stations[nextIndex];
     setActiveStation(nextStation);
     updateHash(nextStation);
-    setTimeout(() => scrollToActive(), 100);
-  }, [stations, activeStation, setActiveStation, updateHash, scrollToActive]);
+  }, [stations, activeStation, setActiveStation, updateHash]);
 
   const handleVolumeChange = useCallback((newVolume) => {
     setVolume(newVolume);

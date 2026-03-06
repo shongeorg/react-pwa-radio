@@ -1,4 +1,5 @@
 import { memo, useCallback } from 'react';
+import { StationItem } from './StationItem.jsx';
 
 export const StationList = memo(function StationList({
   stations,
@@ -63,30 +64,6 @@ export const StationList = memo(function StationList({
             onKeyDown={handleKeyDown}
           />
         ))}
-      </div>
-    </div>
-  );
-});
-
-const StationItem = memo(function StationItem({ station, index, isActive, onSelect, onKeyDown }) {
-  const handleClick = useCallback(() => onSelect(station), [station, onSelect]);
-  const stationName = station.name ? station.name.replace(/_/g, ' ').replace(/  +/g, ' ') : 'Невідомо';
-
-  return (
-    <div
-      className={`station-card${isActive ? ' station-card--active' : ''}`}
-      data-station-uuid={station.stationuuid}
-      role="option"
-      aria-selected={isActive}
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={(e) => onKeyDown(e, station)}
-    >
-      <span className="station-card__index">{index + 1}</span>
-      <span className={`station-card__indicator${isActive ? ' station-card__indicator--visible' : ''}`} aria-hidden="true" />
-      <div className="station-card__content">
-        <h3 className="station-card__name" title={stationName}>{stationName}</h3>
-        {station.tags && <p className="station-card__meta">{station.tags.split(',').slice(0, 3).join(' • ')}</p>}
       </div>
     </div>
   );
