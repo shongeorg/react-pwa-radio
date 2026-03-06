@@ -1,0 +1,103 @@
+/* === MOBILE (< 576px) === */
+@media (max-width: 575px) {
+  .header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .header__title {
+    font-size: 1rem;
+  }
+
+  .header__controls {
+    gap: var(--space-1);
+  }
+
+  .player {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .player__btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .player__btn-primary {
+    width: 48px;
+    height: 48px;
+  }
+
+  .player__info {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .player__volume {
+    display: none;
+  }
+
+  .player__actions {
+    display: none;
+  }
+
+  .station-list {
+    padding: var(--space-1);
+    gap: var(--space-1);
+  }
+
+  .station-card {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .station-card__name {
+    font-size: 0.875rem;
+  }
+
+  .station-card__meta {
+    font-size: 0.625rem;
+  }
+
+  .app__main {
+    padding: var(--space-4);
+    padding-bottom: calc(var(--player-height) + var(--space-4));
+  }
+}
+
+/* === TABLET (576px - 767px) === */
+@media (min-width: 576px) and (max-width: 767px) {
+  .header {
+    padding: var(--space-4);
+  }
+
+  .player {
+    padding: var(--space-4);
+  }
+
+  .station-list {
+    gap: var(--space-2);
+  }
+}
+
+/* === DESKTOP (768px+) === */
+@media (min-width: 768px) {
+  .station-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .station-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .station-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* === HIDE INSTALL BUTTON WHEN NOT AVAILABLE === */
+.install-pwa-btn:empty {
+  display: none;
+}

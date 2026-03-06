@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { Player, StationList, ThemeToggle, NetworkStatus, ConnectionStatus } from './components/index.js';
+import { Player, StationList, ThemeToggle, NetworkStatus, ConnectionStatus, InstallPWA } from './components/index.js';
 import { useTheme, useActiveStation, useAudio, useStations, useScrollToActive } from './hooks/index.js';
 import './styles/index.css';
 
@@ -104,6 +104,7 @@ function App() {
       <header className="app__header header">
         <h1 className="header__title">📻 Українське Радіо</h1>
         <div className="header__controls">
+          <InstallPWA />
           <ConnectionStatus />
           <ThemeToggle theme={theme} onToggle={toggleTheme} />
         </div>
