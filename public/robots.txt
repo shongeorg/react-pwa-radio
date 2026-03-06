@@ -1,0 +1,40 @@
+# Robots.txt for Ukrainian Radio PWA
+# https://pankit.github.io/react-pwa-radio/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://pankit.github.io/react-pwa-radio/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Allow all resources
+Allow: /src/
+Allow: /public/
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.svg$
+Allow: /*.png$
+Allow: /*.webmanifest$
+
+# Disallow admin or private paths (if any)
+Disallow: /admin/
+Disallow: /api/
+
+# Common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /

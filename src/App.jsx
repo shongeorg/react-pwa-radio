@@ -1,89 +1,153 @@
-import { useState, useEffect } from "react";
-import PWABadge from "./PWABadge.jsx";
-import "./App.css";
-import { Station } from "./Station.jsx";
-import { ConnectionStatus } from "./ConnectionStatus.jsx";
-import { NetworkStatus } from "./NetworkStatus.jsx";
+import { useCallback, useEffect } from 'react';
+import { Player, StationList, ThemeToggle, NetworkStatus, ConnectionStatus } from './components/index.js';
+import { useTheme, useActiveStation, useAudio, useStations, useScrollToActive } from './hooks/index.js';
+import './styles/index.css';
 
 function App() {
-  const [stations, setStations] = useState([]);
-  const [active, setActive] = useState(null);
-  const [audio, setAudio] = useState(null);
+  const { theme, toggleTheme } = useTheme();
+
+  const {
+    stations,
+    isLoading: stationsLoading,
+    error: stationsError,
+    searchQuery,
+    setSearchQuery,
+    filteredStations,
+  } = useStations();
+
+  const { activeStation, setActiveStation, volume, setVolume } = useActiveStation(stations);
+
+  const {
+    isPlaying,
+    error: audioError,
+    togglePlay,
+    stop,
+    play,
+  } = useAudio(activeStation, volume);
+
+  const { scrollContainerRef, scrollToActive } = useScrollToActive(activeStation);
 
   useEffect(() => {
-    fetch("https://de1.api.radio-browser.info/json/stations/bycountry/Ukraine")
-      .then((response) => response.json())
-      .then((data) => {
-        setStations(data);
-        setActive(data[0]);
-      });
+    if (!stations || stations.length === 0) return;
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#')) {
+      const stationUuid = hash.slice(1);
+      const foundStation = stations.find(s => s.stationuuid === stationUuid);
+      if (foundStation) {
+        setActiveStation(foundStation);
+        setTimeout(() => play(), 200);
+      }
+    }
+  }, [stations, setActiveStation, play]);
+
+  const updateHash = useCallback((station) => {
+    if (station?.stationuuid) {
+      window.location.hash = station.stationuuid;
+    }
   }, []);
 
-  useEffect(() => {
-    if (active && audio) {
-      audio.pause();
-    }
+  const handleStationSelect = useCallback((station) => {
+    setActiveStation(station);
+    updateHash(station);
+    setTimeout(() => {
+      play();
+      scrollToActive();
+    }, 100);
+  }, [setActiveStation, play, updateHash, scrollToActive]);
 
-    const newAudio = new Audio(active?.url_resolved);
-    setAudio(newAudio);
+  const handlePrevious = useCallback(() => {
+    if (!stations || stations.length === 0 || !activeStation) return;
+    const currentIndex = stations.findIndex(s => s.stationuuid === activeStation.stationuuid);
+    const previousIndex = currentIndex <= 0 ? stations.length - 1 : currentIndex - 1;
+    const prevStation = stations[previousIndex];
+    setActiveStation(prevStation);
+    updateHash(prevStation);
+    setTimeout(() => scrollToActive(), 100);
+  }, [stations, activeStation, setActiveStation, updateHash, scrollToActive]);
 
-    return () => {
-      newAudio.pause();
-      setAudio(null);
-    };
-  }, []);
+  const handleNext = useCallback(() => {
+    if (!stations || stations.length === 0 || !activeStation) return;
+    const currentIndex = stations.findIndex(s => s.stationuuid === activeStation.stationuuid);
+    const nextIndex = currentIndex >= stations.length - 1 ? 0 : currentIndex + 1;
+    const nextStation = stations[nextIndex];
+    setActiveStation(nextStation);
+    updateHash(nextStation);
+    setTimeout(() => scrollToActive(), 100);
+  }, [stations, activeStation, setActiveStation, updateHash, scrollToActive]);
 
-  const handleStationChange = (station) => {
-    setActive(station);
-    if (audio) {
-      audio.pause();
-    }
-    audio.src = station.url_resolved;
-    audio.load();
-    audio.play();
-  };
+  const handleVolumeChange = useCallback((newVolume) => {
+    setVolume(newVolume);
+  }, [setVolume]);
 
-  const sharedHandler = () => {
+  const handleShare = useCallback(async () => {
+    if (!activeStation) return;
+    const shareUrl = `${window.location.origin}${window.location.pathname}#${activeStation.stationuuid}`;
     if (navigator.share) {
-      navigator
-        .share({
-          title: "Ukraine Radio stations",
-          text: "Ukraine Radio stations",
-          url: window.location.href,
-        })
-        .then(() => console.log("Successful share"))
-        .catch((error) => console.log("Error sharing", error));
+      try {
+        await navigator.share({
+          title: 'Українські Радіостанції',
+          text: `Слухаю ${activeStation.name}`,
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Посилання скопійовано!');
+      } catch (error) {
+        console.log('Error:', error);
+      }
     }
-  };
+  }, [activeStation]);
+
+  const handleStop = useCallback(() => stop(), [stop]);
 
   return (
-    <>
-      <ConnectionStatus />
-      <NetworkStatus />
-      <h1>Ukraine Radio stations: {active?.name}</h1>
-      <div className="player">
-        <input
-          type="range"
-          min={0}
-          max={1}
-          value={active?.volume}
-          onChange={(e) => (audio.volume = e.target.value)}
-          step={0.01}
-        />
-        <button onClick={sharedHandler}>shared</button>
+    <div className="app">
+      <header className="app__header header">
+        <h1 className="header__title">📻 Українське Радіо</h1>
+        <div className="header__controls">
+          <ConnectionStatus />
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        </div>
+      </header>
+
+      <div className="app__status-bar">
+        <NetworkStatus />
       </div>
-      <div className="stations-list">
-        {stations.map((station) => (
-          <Station
-            key={station.stationuuid}
-            station={station}
-            active={active}
-            onClick={() => handleStationChange(station)}
+
+      <main className="app__main">
+        <div className="app__content">
+          <StationList
+            stations={filteredStations}
+            activeStation={activeStation}
+            isLoading={stationsLoading}
+            error={stationsError}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onStationSelect={handleStationSelect}
+            scrollContainerRef={scrollContainerRef}
           />
-        ))}
+        </div>
+      </main>
+
+      <div className="app__player player">
+        <Player
+          activeStation={activeStation}
+          isPlaying={isPlaying}
+          volume={volume}
+          onPlayPause={togglePlay}
+          onStop={handleStop}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          onVolumeChange={handleVolumeChange}
+          onShare={handleShare}
+          error={audioError}
+        />
       </div>
-      <PWABadge />
-    </>
+    </div>
   );
 }
 

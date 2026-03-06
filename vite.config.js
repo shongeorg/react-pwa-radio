@@ -2,9 +2,9 @@ import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
+// https://vitejs.dev/config
 export default defineConfig({
-  base: "/react-pwa-radio/",
+  base: "/",
   plugins: [
     react(),
     VitePWA({
@@ -17,10 +17,10 @@ export default defineConfig({
       },
 
       manifest: {
-        name: "react-pwa",
-        short_name: "react-pwa",
-        description: "react-pwa",
-        theme_color: "#ffffff",
+        name: "Українське Радіо",
+        short_name: "УкрРадіо",
+        description: "Слухайте українські радіостанції онлайн безкоштовно",
+        theme_color: "#007bff",
       },
 
       workbox: {

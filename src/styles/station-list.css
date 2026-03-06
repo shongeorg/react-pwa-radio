@@ -1,0 +1,75 @@
+.station-list {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.station-list__wrapper {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+
+.station-list__search {
+  padding: 0 var(--space-2);
+}
+
+.station-list__input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-alt);
+  color: var(--color-text);
+  font-size: 1rem;
+}
+
+.station-list__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.station-list__count {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  padding: 0 var(--space-2);
+}
+
+.station-list__empty,
+.station-list__loading {
+  display: grid;
+  place-items: center;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* === GRID LAYOUTS BY BREAKPOINT === */
+@media (min-width: 576px) {
+  .station-list {
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 768px) {
+  .station-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .station-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .station-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -1,0 +1,62 @@
+.station-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.station-card:hover {
+  background-color: var(--color-bg);
+}
+
+.station-card--active {
+  background-color: var(--color-bg-active);
+  border-color: var(--color-primary);
+}
+
+.station-card__index {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  min-width: 24px;
+  text-align: center;
+}
+
+.station-card__indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  opacity: 0;
+}
+
+.station-card__indicator--visible {
+  opacity: 1;
+}
+
+.station-card__content {
+  min-width: 0;
+}
+
+.station-card__name {
+  font-size: 1rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.station-card--active .station-card__name {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.station-card__meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}

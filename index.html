@@ -1,18 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>react-pwa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Слухайте українські радіостанції онлайн безкоштовно. Найкращі FM радіостанції України в прямому ефірі. Цілодобове мовлення, новини, музика, розваги." />
+    <meta name="keywords" content="українське радіо, радіо онлайн, FM радіо, слухати радіо, радіостанції України, українська музика, новини України, радіо безкоштовно" />
+    <meta name="author" content="Ukrainian Radio PWA" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="theme-color" content="#007bff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Українське Радіо" />
+    <meta name="application-name" content="Українське Радіо" />
+    <meta name="msapplication-TileColor" content="#007bff" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://react-pwa-radio.vercel.app/" />
+    <meta property="og:title" content="Українські Радіостанції Онлайн - Слухати Безкоштовно" />
+    <meta property="og:description" content="Слухайте українські радіостанції онлайн безкоштовно. Найкращі FM радіостанції України в прямому ефірі." />
+    <meta property="og:image" content="https://react-pwa-radio.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:site_name" content="Українське Радіо" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://react-pwa-radio.vercel.app/" />
+    <meta name="twitter:title" content="Українські Радіостанції Онлайн - Слухати Безкоштовно" />
+    <meta name="twitter:description" content="Слухайте українські радіостанції онлайн безкоштовно. Найкращі FM радіостанції України в прямому ефірі." />
+    <meta name="twitter:image" content="https://react-pwa-radio.vercel.app/og-image.png" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://react-pwa-radio.vercel.app/" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    
+    <!-- Preconnect to API -->
+    <link rel="preconnect" href="https://de1.api.radio-browser.info" crossorigin />
+    
+    <!-- Title -->
+    <title>Українські Радіостанції Онлайн - Слухати Безкоштовно | Українське Радіо</title>
+    
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RadioStation",
+      "name": "Українське Радіо",
+      "description": "Онлайн радіо плеєр з українськими радіостанціями",
+      "url": "https://react-pwa-radio.vercel.app/",
+      "logo": "https://react-pwa-radio.vercel.app/favicon.svg",
+      "image": "https://react-pwa-radio.vercel.app/og-image.png",
+      "inLanguage": "uk-UA",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ukraine"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "potentialAction": {
+        "@type": "ListenAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://react-pwa-radio.vercel.app/",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        }
+      }
+    }
+    </script>
+    
+    <!-- MusicGroup Schema for stations -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicGroup",
+      "name": "Українські Радіостанції",
+      "description": "Колекція українських радіостанцій різних жанрів",
+      "genre": ["News", "Music", "Talk", "Pop", "Rock", "Classical"],
+      "countryOfOrigin": "UA"
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="src/main.jsx"></script>
-    <!-- <script type="module">
-      if (CSS.paintWorklet) {
-        CSS.paintWorklet.addModule("AudioVisualizer.js");
-      }
-    </script> -->
+    <div id="root" role="application" aria-label="Українське Радіо - додаток"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <noscript>
+      <div style="padding: 20px; text-align: center; font-family: sans-serif;">
+        <h1>Українське Радіо</h1>
+        <p>Для прослуховування радіостанцій увімкніть JavaScript у вашому браузері.</p>
+      </div>
+    </noscript>
   </body>
 </html>

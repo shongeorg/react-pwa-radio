@@ -1,0 +1,35 @@
+.app {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.app__header {
+  grid-row: 1;
+}
+
+.app__status-bar {
+  grid-row: 2;
+  padding: var(--space-2) var(--space-6);
+  background-color: var(--color-bg-alt);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app__main {
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  padding-bottom: var(--player-height);
+  overflow: hidden;
+}
+
+.app__content {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 0;
+}
