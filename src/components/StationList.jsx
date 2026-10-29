@@ -30,41 +30,41 @@ export const StationList = memo(function StationList({
     return <div className="station-list__empty">{error}</div>;
   }
 
-  if (!stations || stations.length === 0) {
-    return <div className="station-list__empty">Станції не знайдено</div>;
-  }
-
   return (
     <div className="station-list__wrapper">
-      {stations.length > 10 && (
-        <div className="station-list__search">
-          <input
-            type="text"
-            className="station-list__input"
-            placeholder="Пошук станцій..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            aria-label="Пошук станцій"
-          />
-        </div>
+      <div className="station-list__search">
+        <input
+          type="text"
+          className="station-list__input"
+          placeholder="Пошук станцій..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          aria-label="Пошук станцій"
+        />
+      </div>
+
+      {!stations || stations.length === 0 ? (
+        <div className="station-list__empty">Станції не знайдено</div>
+      ) : (
+        <>
+          <div className="station-list__count">
+            {stations.length} {stations.length === 1 ? 'станція' : stations.length < 5 ? 'станції' : 'станцій'}
+          </div>
+
+          <div ref={scrollContainerRef} className="station-list" role="listbox" aria-label="Список радіостанцій" tabIndex={0}>
+            {stations.map((station, index) => (
+              <StationItem
+                key={station.stationuuid}
+                station={station}
+                index={index}
+                isActive={activeStation?.stationuuid === station.stationuuid}
+                onSelect={onStationSelect}
+                onKeyDown={handleKeyDown}
+              />
+            ))}
+          </div>
+        </>
       )}
-
-      <div className="station-list__count">
-        {stations.length} {stations.length === 1 ? 'станція' : stations.length < 5 ? 'станції' : 'станцій'}
-      </div>
-
-      <div ref={scrollContainerRef} className="station-list" role="listbox" aria-label="Список радіостанцій" tabIndex={0}>
-        {stations.map((station, index) => (
-          <StationItem
-            key={station.stationuuid}
-            station={station}
-            index={index}
-            isActive={activeStation?.stationuuid === station.stationuuid}
-            onSelect={onStationSelect}
-            onKeyDown={handleKeyDown}
-          />
-        ))}
-      </div>
     </div>
   );
 });

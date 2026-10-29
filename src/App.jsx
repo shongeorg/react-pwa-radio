@@ -23,6 +23,7 @@ function App() {
     togglePlay,
     stop,
     play,
+    pause,
   } = useAudio(activeStation, volume);
 
   const { scrollContainerRef } = useScrollToActive(activeStation);
@@ -98,6 +99,52 @@ function App() {
   }, [activeStation]);
 
   const handleStop = useCallback(() => stop(), [stop]);
+
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return;
+
+    const handlers = {
+      play: () => play(),
+      pause: () => pause(),
+      previoustrack: handlePrevious,
+      nexttrack: handleNext,
+    };
+
+    Object.entries(handlers).forEach(([action, handler]) => {
+      try {
+        navigator.mediaSession.setActionHandler(action, handler);
+      } catch {}
+    });
+
+    return () => {
+      Object.keys(handlers).forEach((action) => {
+        try {
+          navigator.mediaSession.setActionHandler(action, null);
+        } catch {}
+      });
+      navigator.mediaSession.metadata = null;
+      navigator.mediaSession.playbackState = 'none';
+    };
+  }, [play, pause, handlePrevious, handleNext]);
+
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return;
+
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+
+    if (!activeStation) return;
+
+    const artwork = activeStation.favicon
+      ? [{ src: activeStation.favicon, sizes: 'any' }]
+      : [];
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: activeStation.name,
+      artist: activeStation.country || 'Українське радіо',
+      album: '📻 Українське Радіо',
+      artwork,
+    });
+  }, [activeStation, isPlaying]);
 
   return (
     <div className="app">

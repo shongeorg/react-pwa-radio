@@ -19,16 +19,28 @@ export default defineConfig({
         name: "Українське Радіо",
         short_name: "УкрРадіо",
         description: "Слухайте українські радіостанції онлайн безкоштовно",
-        theme_color: "#007bff",
-        background_color: "#ffffff",
-        display: "standalone",
+        id: "/",
+        scope: "/",
         start_url: "/",
+        display: "standalone",
+        orientation: "portrait",
+        lang: "uk-UA",
+        dir: "ltr",
+        categories: ["music", "entertainment", "news"],
+        theme_color: "#007bff",
+        background_color: "#0f0f0f",
         icons: [
           {
             src: "favicon.svg",
             sizes: "any",
             type: "image/svg+xml",
-            purpose: "any maskable"
+            purpose: "any"
+          },
+          {
+            src: "icon-maskable.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "maskable"
           }
         ]
       },
