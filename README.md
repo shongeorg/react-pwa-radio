@@ -14,6 +14,7 @@
 - 💾 Збереження налаштувань в LocalStorage
 - 📱 Повністю адаптивний дизайн
 - 🔄 PWA з офлайн-підтримкою
+- 🔊 Керування з шторки та екрана блокування (Media Session API)
 - 🌐 Web Share API з поділом посиланням на станцію
 - 📊 Моніторинг мережі
 - 🔍 Пошук по станціях
@@ -113,6 +114,57 @@ https://react-pwa-radio.vercel.app/#station-uuid
 1. Відкрийте [react-pwa-radio.vercel.app](https://react-pwa-radio.vercel.app/)
 2. Натисніть "Додати на головний екран" у браузері
 3. Додаток буде доступний як нативний
+
+## 🔊 Media Session API (шторка та екран блокування)
+
+Коли радіо грає, Android/iOS показують картку відтворення в шторці та на екрані блокування.
+Уся реалізація — у `src/App.jsx`. Це нативний Web Media Session API, без залежностей.
+
+### Зареєстровані кнопки
+
+| Кнопка в шторці | Функція | Опис |
+| --- | --- | --- |
+| `play` | `play()` | Починає відтворення (не перемикач) |
+| `pause` | `pause()` | Ставить на паузу |
+| `previoustrack` | `handlePrevious()` | Попередня станція зі списку |
+| `nexttrack` | `handleNext()` | Наступна станція зі списку |
+
+Хендлери викликають ті самі функції, що й кнопки в інтерфейсі, тому веб-UI та системна картка
+завжди синхронізовані. Реєстрація відбувається в `useEffect`, кожен `setActionHandler`
+обгорнутий у власний `try/catch` (старі браузери знають `mediaSession`, але не всі дії).
+
+Кнопки `seekbackward` / `seekforward` / `seekto` **не реєструються**: це live-потік без тривалості,
+перемотка неможлива, а смуга прогресу для радіо безглузда.
+
+### Метадані
+
+`navigator.mediaSession.metadata` оновлюється при зміні станції:
+
+- `title` — назва станції (`activeStation.name`)
+- `artist` — країна (`activeStation.country`)
+- `album` — «📻 Українське Радіо»
+- `artwork` — фавікон станції з API, якщо є
+
+`navigator.mediaSession.playbackState` синхронізується з `isPlaying`:
+`"playing"` під час відтворення, `"paused"` на паузі.
+
+При розмонтуванні компонента всі хендлери знімаються (`setActionHandler(action, null)`),
+а `metadata` і `playbackState` очищаються.
+
+```jsx
+const handlers = {
+  play: () => play(),
+  pause: () => pause(),
+  previoustrack: handlePrevious,
+  nexttrack: handleNext,
+};
+
+Object.entries(handlers).forEach(([action, handler]) => {
+  try {
+    navigator.mediaSession.setActionHandler(action, handler);
+  } catch {}
+});
+```
 
 ## 🎨 CSS Архітектура
 
